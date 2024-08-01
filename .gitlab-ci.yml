@@ -1,0 +1,28 @@
+image: ubuntu:latest
+
+stages:
+  - build
+  - test
+
+before_script:
+  - apt-get update -qq
+  - apt-get install -y clang cmake libsfml-dev
+
+build:
+  stage: build
+  script:
+    - cmake -S . -B build
+    - cmake --build build
+  artifacts:
+    paths:
+      - build/
+
+test:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - ls -la build
+    - cd build
+    - ls -la
+    - ctest --output-on-failure
